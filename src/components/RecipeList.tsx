@@ -50,6 +50,8 @@ const RecipeList: React.FC = () => {
     };
 
 
+    const opt = {currentPage, nextPage, prevPage, total, totalPages};
+
     return (
         <Box>
             <SearchBar
@@ -67,8 +69,15 @@ const RecipeList: React.FC = () => {
             )}
             {loading ? (
                 <Spinner size="lg" mt={4}/>
-            ) : (
-                <Table mt={4}  variant="striped" colorScheme="teal">
+            ) : (<>
+               
+                <PagerBar totalPages={totalPages} total={total}
+                          prevPage={prevPage}
+                          nextPage={nextPage}
+                          currentPage={currentPage}
+
+                />
+                <Table mt={4} variant="striped" colorScheme="teal">
                     <Thead>
                         <Tr>
                             <Th>ID</Th>
@@ -88,7 +97,8 @@ const RecipeList: React.FC = () => {
                         ))}
                     </Tbody>
                 </Table>
-            )}
+            </>)
+            }
         </Box>
     )
         ;

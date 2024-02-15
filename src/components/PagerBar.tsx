@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from "@chakra-ui/react";
 
 interface PagerBarProps {
   total: number | null;
@@ -16,9 +17,9 @@ const PagerBar: React.FC<PagerBarProps> = ({ total, totalPages, currentPage, pre
       </div>
       {totalPages && totalPages > 0 && (
         <div className="pager-controls">
-          <button onClick={prevPage} disabled={currentPage === 1}>Prev</button>
+          <Button onClick={prevPage} disabled={currentPage === 1}>Prev</Button>
           <span>{currentPage} / {totalPages}</span>
-          <button onClick={nextPage} disabled={currentPage === totalPages}>Next</button>
+          <Button onClick={nextPage} disabled={currentPage === totalPages}>Next</Button>
         </div>
       )}
     </div>

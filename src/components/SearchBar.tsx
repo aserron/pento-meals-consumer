@@ -1,6 +1,6 @@
 import React from 'react';
 import {Category} from '../hooks/useMeals';
-import {FormControl, Input} from "@chakra-ui/react";
+import {Flex, FormControl, FormLabel, Heading, HStack, Input, Select} from "@chakra-ui/react";
 
 // import './SearchBar.css'; // Import CSS file for styling
 
@@ -19,36 +19,49 @@ const SearchBar: React.FC<SearchBarProps> = ({
                                                  categories,
                                                  onCategoryChange,
                                              }) => {
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        onSearchChange(e.target.value);
-    };
-
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        onCategoryChange(e.target.value);
-    };
-
     return (
-        <section className="search-bar-section"> {/* Section container with a title */}
-            {/*<h2>Recipe Search</h2>*/}
-            <FormControl p={3}>                
-                <Input id="searchInput" type="text" value={searchQuery} onChange={handleSearchChange}
-                       placeholder="Search By Name"/>
-            </FormControl>
-
-            <div className="search-bar-container"> {/* Apply container-wide styling */}
-                <label htmlFor="categorySelect">category:</label>
-                <select id="categorySelect" value={selectedCategory} onChange={handleCategoryChange}>
-                    <option value="">All Categories</option>
-                    {categories.map((category) => (
-                        <option key={category.idCategory} value={category.strCategory}>
-                            {category.strCategory}
-                        </option>
-                    ))}
-                </select>
+        <>
+            <Flex justify="center" m={4}>
+                
+                <FormControl>
+                    {/*<FormLabel htmlFor="search">Search Recipes:</FormLabel>*/}
+                    <Input
+                        id="search"
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Search recipes"
+                    />
+                </FormControl>
+            </Flex>
 
 
-            </div>
-        </section>
+            <Flex align="center" justify="center">
+
+                <FormControl>
+
+                    <HStack>
+
+                        <FormLabel htmlFor="category">Filters:</FormLabel>
+
+                        <Select
+                            id="category"
+                            maxWidth={300}
+                            value={selectedCategory}
+                            onChange={(e) => onCategoryChange(e.target.value)}
+                            placeholder="Category"
+                        >
+                            <option value="">All Categories</option>
+                            {categories.map((category) => (
+                                <option key={category.idCategory} value={category.strCategory}>
+                                    {category.strCategory}
+                                </option>
+                            ))}
+                        </Select>
+                    </HStack>
+                </FormControl>
+            </Flex>
+        </>
     );
 };
 

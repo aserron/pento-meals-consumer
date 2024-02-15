@@ -1,14 +1,14 @@
 import React from 'react';
 import './App.css';
 import RecipeList from "./components/RecipeList";
-import {Box, Center, ChakraProvider} from "@chakra-ui/react";
+import {Box, Center, ChakraProvider, CSSReset} from "@chakra-ui/react";
 
 function App() {
     return (
         <ChakraProvider>
-
+            <CSSReset />
             <div className="App" style={{display: 'hidden'}}>
-                <Box>
+                <Box p={4}>
                     <header className="App-header">
                         <Center>
                             <h1>Meals API Consumter</h1>
