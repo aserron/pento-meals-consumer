@@ -8,7 +8,6 @@ import {Box, Table, Thead, Tbody, Tr, Th, Td, Spinner, Alert, AlertIcon} from '@
 
 
 const RecipeList: React.FC = () => {
-
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [selectedArea, setSelectedArea] = useState<string>('');
