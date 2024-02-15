@@ -57,12 +57,12 @@ interface CategoriesResponse {
 const useMeals = (searchQuery: string = '', category: string = '', pageSize: number = DEFAULT_PAGE_SIZE) => {
     const [allMeals, setAllMeals] = useState<Recipe[]>([]);
     const [filteredMeals, setFilteredMeals] = useState<Recipe[]>([]);
-    const [categories, setCategories]   = useState<Category[]>([]);
-    const [loading, setLoading]         = useState<boolean>(false);
-    const [error, setError]             = useState<string | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [totalPages, setTotalPages]   = useState<number | null>(null);
-    const [total, setTotal]             = useState<number | null>(null);
+    const [totalPages, setTotalPages] = useState<number | null>(null);
+    const [total, setTotal] = useState<number | null>(null);
 
     const fetchMeals = useCallback(async () => {
         setLoading(true);
@@ -84,7 +84,7 @@ const useMeals = (searchQuery: string = '', category: string = '', pageSize: num
                 setTotal((data.meals || []).length);
                 setTotalPages(Math.ceil((data.meals || []).length / pageSize));
             }
-            
+
         } catch (error) {
             setError('Error fetching meals');
         } finally {
@@ -133,7 +133,18 @@ const useMeals = (searchQuery: string = '', category: string = '', pageSize: num
         }
     };
 
-    return {meals: filteredMeals, categories, loading, error, currentPage, totalPages, total, goToPage, nextPage, prevPage};
+    const reloadMeals = useCallback(() => {
+        const p = currentPage;
+        fetchMeals().then(() => {
+            goToPage(p)
+        });
+    }, [currentPage]);
+
+    return {
+        meals: filteredMeals, categories, loading, error,
+        currentPage, totalPages, total, goToPage, nextPage, prevPage,
+        reloadMeals
+    };
 };
 
 export default useMeals;

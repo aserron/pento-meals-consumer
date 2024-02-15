@@ -24,7 +24,8 @@ const RecipeList: React.FC = () => {
         currentPage,
         goToPage,
         nextPage,
-        prevPage
+        prevPage,
+        reloadMeals
 
     } = useMeals(
         searchQuery,
@@ -33,11 +34,22 @@ const RecipeList: React.FC = () => {
     );
 
 
-    useEffect(
-        () => {
+    useEffect(() => {
             goToPage(1); // Reset current page when search query or category changes        
         },
         [searchQuery, selectedCategory]);
+
+    
+    useEffect(() => {
+        console.info('Setting Interval')
+        const intervalId = setInterval(() => {
+            console.info('Reloading Meal');
+            reloadMeals();
+        }, 10000); // Reload every 10 seconds
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [reloadMeals]);
 
 
     const handleSearchChange = (s: string) => {
@@ -70,7 +82,7 @@ const RecipeList: React.FC = () => {
             {loading ? (
                 <Spinner size="lg" mt={4}/>
             ) : (<>
-               
+
                 <PagerBar totalPages={totalPages} total={total}
                           prevPage={prevPage}
                           nextPage={nextPage}
