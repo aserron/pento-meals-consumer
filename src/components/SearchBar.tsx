@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Category} from '../hooks/useMeals';
-import {Flex, FormControl, FormLabel, Heading, HStack, Input, Select} from "@chakra-ui/react";
+import {Flex, FormControl, FormLabel, HStack, Input, Select} from "@chakra-ui/react";
 
 // import './SearchBar.css'; // Import CSS file for styling
 
@@ -13,7 +13,7 @@ function AreaSelect(props: { value: string, onChange: (e: any) => void }) {
             .then(res => res.json())
             .then(data => {
                 const arr = data.meals.map((it: any) => it.strArea);
-                setAreas((prev) => arr);
+                setAreas(arr);
             })
     }, [])
 
@@ -48,65 +48,66 @@ interface SearchBarProps {
 }
 
 
-const SearchBar: React.FC<SearchBarProps> = ({
-                                                 searchQuery,
-                                                 onSearchChange,
-                                                 categories,
-                                                 selectedCategory,
-                                                 onCategoryChange,
-                                                 selectedArea,
-                                                 onAreaChange,
-                                             }) => {
-    return (
-        <>
-            <Flex justify="center" m={4}>
+const SearchBar: React.FC<SearchBarProps> = (
+    {
+        searchQuery,
+        onSearchChange,
+        categories,
+        selectedCategory,
+        onCategoryChange,
+        selectedArea,
+        onAreaChange,
+    }
+) => {
+    return (<>
+        <Flex justify="center" m={4}>
+            <FormControl>
+                {/*<FormLabel htmlFor="search">Search Recipes:</FormLabel>*/}
+                <Input
+                    id="search"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => onSearchChange(e.target.value)}
+                    placeholder="Search recipes"
+                />
+            </FormControl>
+        </Flex>
 
-                <FormControl>
-                    {/*<FormLabel htmlFor="search">Search Recipes:</FormLabel>*/}
-                    <Input
-                        id="search"
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                        placeholder="Search recipes"
-                    />
-                </FormControl>
-            </Flex>
 
+        <Flex align="center" justify="center">
 
-            <Flex align="center" justify="center">
+            <FormControl>
 
-                <FormControl>
+                <HStack>
 
-                    <HStack>
+                    <FormLabel htmlFor="category">Filters:</FormLabel>
 
-                        <FormLabel htmlFor="category">Filters:</FormLabel>
-
-                        <Select
-                            id="area"
-                            maxWidth={300}
-                            value={selectedCategory}
-                            onChange={(e) => onCategoryChange(e.target.value)}
-                            placeholder="Categories"
-                        >
-                            <option value="">All Categories</option>
-                            {categories.map((category) => (
+                    <Select
+                        id="area"
+                        maxWidth={300}
+                        value={selectedCategory}
+                        onChange={(e) => onCategoryChange(e.target.value)}
+                        placeholder="Categories"
+                    >
+                        <option value="">All Categories</option>
+                        {
+                            categories.map((category) => (
                                 <option key={category.idCategory} value={category.strCategory}>
                                     {category.strCategory}
                                 </option>
-                            ))}
-                        </Select>
+                            ))
+                        }
+                    </Select>
 
-                        <AreaSelect
-                            value={selectedArea}
-                            onChange={(e) => onAreaChange(e.target.value)}/>
+                    <AreaSelect
+                        value={selectedArea}
+                        onChange={(e) => onAreaChange(e.target.value)}/>
 
 
-                    </HStack>
-                </FormControl>
-            </Flex>
-        </>
-    );
+                </HStack>
+            </FormControl>
+        </Flex>
+    </>)
 };
 
 export default SearchBar;
