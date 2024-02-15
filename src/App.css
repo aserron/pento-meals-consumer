@@ -159,3 +159,22 @@
 .pager-controls span {
   margin: 0 5px; /* Add spacing between controls */
 }
+
+.recipes-error {
+    border: red solid 2px;
+    padding: 20px;
+    width: 80%;
+    display: block;
+}
+
+.error-section {
+  display: flex;
+  justify-content: center;
+}
+
+.error-section article {
+    border: red solid 2px;
+    background: wheat;
+    border-radius: 5px;
+  width: 50%;
+}
