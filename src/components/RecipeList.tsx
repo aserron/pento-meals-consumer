@@ -11,8 +11,9 @@ const RecipeList: React.FC = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [selectedArea, setSelectedArea] = useState<string>('');
 
-    const pageSize = 10; // Change the page size as needed
+    const pageSize = 5; // Change the page size as needed
 
     const {
         meals,
@@ -29,7 +30,8 @@ const RecipeList: React.FC = () => {
 
     } = useMeals(
         searchQuery,
-        selectedCategory,
+        selectedArea,
+        selectedCategory,        
         pageSize
     );
 
@@ -37,9 +39,9 @@ const RecipeList: React.FC = () => {
     useEffect(() => {
             goToPage(1); // Reset current page when search query or category changes        
         },
-        [searchQuery, selectedCategory]);
+        [searchQuery, selectedCategory,selectedArea]);
 
-    
+
     useEffect(() => {
         console.info('Setting Interval')
         const intervalId = setInterval(() => {
@@ -60,6 +62,11 @@ const RecipeList: React.FC = () => {
         console.info('handleCategoryChange  cat=%s', category)
         setSelectedCategory(category);
     };
+    
+    const handleAreaChange = (s: string) => {
+            console.info('handle Area Change  area=%s', s)
+            setSelectedArea(s);
+        };
 
 
     const opt = {currentPage, nextPage, prevPage, total, totalPages};
@@ -69,9 +76,13 @@ const RecipeList: React.FC = () => {
             <SearchBar
                 searchQuery={searchQuery}
                 onSearchChange={handleSearchChange}
-                selectedCategory={selectedCategory}
+                
+                selectedCategory={selectedCategory}                
                 categories={categories}
                 onCategoryChange={handleCategoryChange}
+                
+                selectedArea={selectedArea}
+                onAreaChange={handleAreaChange}
             />
             {error && (
                 <Alert status="error" mt={4}>

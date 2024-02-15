@@ -1,4 +1,3 @@
-// src/hooks/useMeals.ts
 import {useState, useEffect, useCallback} from 'react';
 
 const BASE_URL = 'https://www.themealdb.com/api/json/v1/1';
@@ -35,7 +34,6 @@ interface Recipe {
     strMeasure9: string;
     strMeasure10: string;
 }
-
 interface ApiResponse {
     meals?: Recipe[];
     total?: number;
@@ -47,14 +45,11 @@ export interface Category {
     strCategoryThumb: string;
     strCategoryDescription: string;
 }
-
-
 interface CategoriesResponse {
     categories: Category[];
 }
 
-
-const useMeals = (searchQuery: string = '', category: string = '', pageSize: number = DEFAULT_PAGE_SIZE) => {
+const useMeals = (searchQuery: string = '', area: string = '', category: string = '', pageSize: number = DEFAULT_PAGE_SIZE) => {
     const [allMeals, setAllMeals] = useState<Recipe[]>([]);
     const [filteredMeals, setFilteredMeals] = useState<Recipe[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -65,17 +60,22 @@ const useMeals = (searchQuery: string = '', category: string = '', pageSize: num
     const [total, setTotal] = useState<number | null>(null);
 
     const fetchMeals = useCallback(async () => {
+
         setLoading(true);
         setError(null);
 
         try {
             let url = `${BASE_URL}/search.php?s=${searchQuery}`;
-            if (category) {
-                url = `${BASE_URL}/filter.php?c=${category}`;
-            }
+
+            // if (category) {
+            //     url = `${BASE_URL}/filter.php?c=${category}`;
+            // } else if (area) {
+            //     url = `${BASE_URL}/filter.php?a=${area}`;
+            // }
 
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
+
             setAllMeals(data.meals || []);
 
             if (data.total !== undefined) {
@@ -103,30 +103,45 @@ const useMeals = (searchQuery: string = '', category: string = '', pageSize: num
     }, []);
 
     useEffect(() => {
-        fetchMeals();
-        fetchCategories();
-    }, [fetchMeals, fetchCategories]);
+            fetchCategories().then(() => fetchMeals());
+        },
+        [fetchMeals, fetchCategories]
+    );
 
     useEffect(() => {
-        // Filter meals based on search query and pagination
-        const startIndex = (currentPage - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const filtered = allMeals
-            .filter((meal) => meal.strMeal.toLowerCase().includes(searchQuery.toLowerCase()))
-            .slice(startIndex, endIndex);
-        setFilteredMeals(filtered);
-    }, [searchQuery, allMeals, currentPage, pageSize]);
+            // Filter meals based on category and area, if present.            
+            const filtered = allMeals
+                .filter((meal) => ((category === '') || meal.strCategory === category))
+                .filter((meal) => ((area === '') || meal.strArea === area))
+
+
+            // updating total and pages with filted version.                
+            setTotalPages(Math.ceil(filtered.length / pageSize));
+            setTotal((filtered || []).length);
+
+            // console.info('filtered, setting filtered and total', filtered);
+
+            // paging
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+
+            // slicing the filtered to get the page.
+            const result = filtered.slice(startIndex, endIndex);
+
+            setFilteredMeals(result);
+        },
+        [searchQuery, allMeals, currentPage, pageSize]
+    );
+
 
     const goToPage = (page: number) => {
         setCurrentPage(page);
     };
-
     const nextPage = () => {
         if (currentPage < (totalPages || 1)) {
             setCurrentPage(currentPage + 1);
         }
     };
-
     const prevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
