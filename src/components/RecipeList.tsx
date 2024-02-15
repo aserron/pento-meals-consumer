@@ -23,16 +23,13 @@ const RecipeList: React.FC = () => {
         // setCurrentPage(1); // Reset current page when search query or category changes
     }, [searchQuery, selectedCategory]);
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(e.target.value);
-    };
     
-    const onSearchChange = (s: string) => {
+    const handleSearchChange = (s: string) => {
         setSearchQuery(s);
     };
 
     const handleCategoryChange = (category: string) => {
-        console.info('category:', category)
+        console.info('handleCategoryChange  cat=%s', category)
         setSelectedCategory(category);
     };
 
@@ -40,7 +37,7 @@ const RecipeList: React.FC = () => {
     return (
         <section className={`recipes`}>
             <SearchBar searchQuery={searchQuery}
-                       onSearchChange={onSearchChange}
+                       onSearchChange={handleSearchChange}
                        selectedCategory={selectedCategory}
                        categories={categories}
                        onCategoryChange={handleCategoryChange}
