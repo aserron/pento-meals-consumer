@@ -26,10 +26,12 @@ yarn-error.log*
 # IDEA
 .idea
 /.idea
-/.idea/**
+/.idea/*.*
+/.idea/misc.xml
+/.idea/modules.xml
 
 # VSCODE
 .code
 ./.code
 ./.code/*
-/.idea/
+/.code/

@@ -36,3 +36,126 @@
     transform: rotate(360deg);
   }
 }
+
+.App-header {
+  display: none;
+}
+
+.App-search {
+  padding: 20px 2px;
+}
+
+.list-cat {
+  display: flex;
+  flex-basis: content;
+  flex-direction: column;
+}
+
+.list-cat li {
+  display: block;
+  
+}
+
+.list-cat li > p {
+  display: flex;
+  font-size: smaller;
+  
+}
+
+
+.recipes
+{
+    background: lightblue;
+    display: block;
+    width: 100%;
+}
+
+.list-ct
+{
+    display: flex;
+}
+.recipes-list {
+    font-size: smaller;
+    
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row;
+    zoom: 0.3;
+    /* width: 300px; */
+    flex-wrap: wrap;
+}
+
+
+.recipes-list li  {
+  display   : block;
+  min-height: 40px;
+  width     : 400px;
+}
+
+
+.recipes-list li > h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+.recipes-list li > p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.recipes-list li > img {
+    display: block;
+  width: 100%;
+    overflow-clip-margin: content-box;
+    overflow: clip;
+}
+
+
+.recipes-list li {
+    display: block !important;
+    min-height: 40px;
+    width: 599px !important;
+    flex-direction: column;
+    padding-bottom: 40px;
+}
+
+.recipes-detail {
+    background: lightgoldenrodyellow;
+    display: none;
+}
+
+
+.search-bar-container {
+  display: flex; /* Use flexbox layout */
+  justify-content: space-between; /* Align controls with equal space between them */
+  width: 100%; /* Make the container width of its parent */
+  margin-bottom: 20px; /* Add some bottom margin for spacing */
+}
+
+.search-bar-container label,
+.search-bar-container input,
+.search-bar-container select {
+  margin-right: 10px; /* Add some right margin for spacing between controls */
+}
+
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pager-found {
+  margin-right: auto; /* Push "Found" text to the left */
+}
+
+.pager-controls button,
+.pager-controls span {
+  margin: 0 5px; /* Add spacing between controls */
+}
