@@ -4,6 +4,8 @@ import React, {useEffect, useState} from 'react';
 import useMeals from '../hooks/useMeals';
 import SearchBar from "./SearchBar";
 import PagerBar from "./PagerBar";
+import {Box, Table, Thead, Tbody, Tr, Th, Td, Spinner, Alert, AlertIcon} from '@chakra-ui/react';
+
 
 const RecipeList: React.FC = () => {
 
@@ -31,9 +33,11 @@ const RecipeList: React.FC = () => {
     );
 
 
-    useEffect(() => {
-        goToPage(1); // Reset current page when search query or category changes        
-    }, [searchQuery, selectedCategory]);
+    useEffect(
+        () => {
+            goToPage(1); // Reset current page when search query or category changes        
+        },
+        [searchQuery, selectedCategory]);
 
 
     const handleSearchChange = (s: string) => {
@@ -47,57 +51,47 @@ const RecipeList: React.FC = () => {
 
 
     return (
-        <section className={`recipes`}>
-            <SearchBar searchQuery={searchQuery}
-                       onSearchChange={handleSearchChange}
-                       selectedCategory={selectedCategory}
-                       categories={categories}
-                       onCategoryChange={handleCategoryChange}
-            ></SearchBar>
-
-
+        <Box>
+            <SearchBar
+                searchQuery={searchQuery}
+                onSearchChange={handleSearchChange}
+                selectedCategory={selectedCategory}
+                categories={categories}
+                onCategoryChange={handleCategoryChange}
+            />
             {error && (
-                <section className="error-section">
-                    <article>
-                        <h3>Error!</h3>
-                        <p>{error}</p>
-                    </article>
-                </section>
+                <Alert status="error" mt={4}>
+                    <AlertIcon/>
+                    {error}
+                </Alert>
             )}
-
-            <div>
-                <h2>Recipes</h2>
-                <PagerBar
-                    total={total}
-                    totalPages={totalPages}
-                    currentPage={currentPage}
-                    prevPage={prevPage}
-                    nextPage={nextPage}
-                />
-
-                {loading
-                    ? <h2>loading</h2>
-                    : <div className={`list-ct`}>
-                        <ul className={`recipes-list`}>
-                            {meals.map((meal) => (
-                                <li key={meal.idMeal}>
-                                    {/*id, name, area, category.*/}
-                                    <h3>{meal.idMeal} - {meal.strMeal} - {meal.strArea} - {meal.strCategory}</h3>
-                                    <div className={`recipes-detail`}>
-                                        <img src={meal.strMealThumb} alt={meal.strMeal}/>
-                                        <p>{meal.strInstructions}</p>
-                                    </div>
-
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                }
-            </div>
-
-
-        </section>
-    );
+            {loading ? (
+                <Spinner size="lg" mt={4}/>
+            ) : (
+                <Table mt={4}  variant="striped" colorScheme="teal">
+                    <Thead>
+                        <Tr>
+                            <Th>ID</Th>
+                            <Th>Name</Th>
+                            <Th>Area</Th>
+                            <Th>Category</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {meals.map((meal) => (
+                            <Tr key={meal.idMeal}>
+                                <Td>{meal.idMeal}</Td>
+                                <Td>{meal.strMeal}</Td>
+                                <Td>{meal.strArea}</Td>
+                                <Td>{meal.strCategory}</Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                </Table>
+            )}
+        </Box>
+    )
+        ;
 };
 
 export default RecipeList;

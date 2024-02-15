@@ -1,5 +1,6 @@
 import React from 'react';
 import {Category} from '../hooks/useMeals';
+import {FormControl, Input} from "@chakra-ui/react";
 
 // import './SearchBar.css'; // Import CSS file for styling
 
@@ -28,7 +29,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     return (
         <section className="search-bar-section"> {/* Section container with a title */}
-            <h2>Recipe Search</h2>
+            {/*<h2>Recipe Search</h2>*/}
+            <FormControl p={3}>                
+                <Input id="searchInput" type="text" value={searchQuery} onChange={handleSearchChange}
+                       placeholder="Search By Name"/>
+            </FormControl>
 
             <div className="search-bar-container"> {/* Apply container-wide styling */}
                 <label htmlFor="categorySelect">category:</label>
@@ -41,9 +46,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     ))}
                 </select>
 
-                <label htmlFor="searchInput">Search Name:</label>
-                <input id="searchInput" type="text" value={searchQuery} onChange={handleSearchChange}
-                       placeholder="Search recipes"/>
 
             </div>
         </section>
