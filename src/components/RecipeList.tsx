@@ -4,13 +4,15 @@ import React, {useEffect, useState} from 'react';
 import useMeals from '../hooks/useMeals';
 import SearchBar from "./SearchBar";
 import PagerBar from "./PagerBar";
-import {Box, Table, Thead, Tbody, Tr, Th, Td, Spinner, Alert, AlertIcon} from '@chakra-ui/react';
+import {Box, Table, Thead, Tbody, Tr, Th, Td, Spinner, Alert, AlertIcon, Image} from '@chakra-ui/react';
 
 
 const RecipeList: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [selectedArea, setSelectedArea] = useState<string>('');
+
+    const [reload, setReload] = useState(true);
 
     const pageSize = 5; // Change the page size as needed
 
@@ -30,7 +32,7 @@ const RecipeList: React.FC = () => {
     } = useMeals(
         searchQuery,
         selectedArea,
-        selectedCategory,        
+        selectedCategory,
         pageSize
     );
 
@@ -38,48 +40,48 @@ const RecipeList: React.FC = () => {
     useEffect(() => {
             goToPage(1); // Reset current page when search query or category changes        
         },
-        [searchQuery, selectedCategory,selectedArea]);
+        [searchQuery, selectedCategory, selectedArea]);
 
 
+    // further we can add a switch to control reloading.
     useEffect(() => {
-        console.info('Setting Interval')
+        console.info('Setting Interval reload:%s', reload);
+
         const intervalId = setInterval(() => {
-            console.info('Reloading Meal');
-            reloadMeals();
+            if (reload) {
+                reloadMeals();
+            }
         }, 10000); // Reload every 10 seconds
         return () => {
             clearInterval(intervalId);
         };
-    }, [reloadMeals]);
+    }, [reloadMeals, reload]);
 
 
+    // handlers.
     const handleSearchChange = (s: string) => {
         setSearchQuery(s);
     };
-
     const handleCategoryChange = (category: string) => {
-        console.info('handleCategoryChange  cat=%s', category)
+        console.info('handleCategoryChange cat=%s', category)
         setSelectedCategory(category);
     };
-    
     const handleAreaChange = (s: string) => {
-            console.info('handle Area Change  area=%s', s)
-            setSelectedArea(s);
-        };
+        console.info('handleAreaChange area=%s', s)
+        setSelectedArea(s);
+    };
 
-
-    const opt = {currentPage, nextPage, prevPage, total, totalPages};
 
     return (
         <Box>
             <SearchBar
                 searchQuery={searchQuery}
                 onSearchChange={handleSearchChange}
-                
-                selectedCategory={selectedCategory}                
+
+                selectedCategory={selectedCategory}
                 categories={categories}
                 onCategoryChange={handleCategoryChange}
-                
+
                 selectedArea={selectedArea}
                 onAreaChange={handleAreaChange}
             />
@@ -89,41 +91,46 @@ const RecipeList: React.FC = () => {
                     {error}
                 </Alert>
             )}
+
             {loading ? (
                 <Spinner size="lg" mt={4}/>
             ) : (<>
 
-                <PagerBar totalPages={totalPages} total={total}
-                          prevPage={prevPage}
-                          nextPage={nextPage}
-                          currentPage={currentPage}
-
+                <PagerBar
+                    total={total}
+                    totalPages={totalPages}
+                    prevPage={prevPage}
+                    nextPage={nextPage}
+                    currentPage={currentPage}
                 />
+                
                 <Table mt={4} variant="striped" colorScheme="teal">
                     <Thead>
                         <Tr>
-                            <Th>ID</Th>
+                            <Th width={4}>ID</Th>
+                            <Th width={100}>-</Th>
                             <Th>Name</Th>
                             <Th>Area</Th>
                             <Th>Category</Th>
                         </Tr>
                     </Thead>
+                    
                     <Tbody>
                         {meals.map((meal) => (
                             <Tr key={meal.idMeal}>
-                                <Td>{meal.idMeal}</Td>
+                                <Td w={4}>{`#${meal.idMeal}`}</Td>
+                                <Td w={10} pr={0}><Image src={meal.strMealThumb}></Image></Td>
                                 <Td>{meal.strMeal}</Td>
                                 <Td>{meal.strArea}</Td>
                                 <Td>{meal.strCategory}</Td>
                             </Tr>
                         ))}
-                    </Tbody>
+                    </Tbody>                    
                 </Table>
             </>)
             }
         </Box>
-    )
-        ;
+    );
 };
 
 export default RecipeList;
