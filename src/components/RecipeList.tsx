@@ -1,17 +1,30 @@
 // src/components/RecipeList.tsx
 import React, {useEffect, useState} from 'react';
+
 import useMeals from '../hooks/useMeals';
 import SearchBar from "./SearchBar";
 import PagerBar from "./PagerBar";
 
 const RecipeList: React.FC = () => {
+
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
-    // const [currentPage, setCurrentPage] = useState<number>(1);
 
     const pageSize = 10; // Change the page size as needed
 
-    const {meals, categories, loading, error, totalPages, total, currentPage, goToPage, nextPage, prevPage} = useMeals(
+    const {
+        meals,
+        categories,
+        loading,
+        error,
+        total,
+        totalPages,
+        currentPage,
+        goToPage,
+        nextPage,
+        prevPage
+
+    } = useMeals(
         searchQuery,
         selectedCategory,
         pageSize
@@ -19,11 +32,10 @@ const RecipeList: React.FC = () => {
 
 
     useEffect(() => {
-        goToPage(1)
-        // setCurrentPage(1); // Reset current page when search query or category changes
+        goToPage(1); // Reset current page when search query or category changes        
     }, [searchQuery, selectedCategory]);
 
-    
+
     const handleSearchChange = (s: string) => {
         setSearchQuery(s);
     };
@@ -42,18 +54,26 @@ const RecipeList: React.FC = () => {
                        categories={categories}
                        onCategoryChange={handleCategoryChange}
             ></SearchBar>
-            
-            
-            {error && <article><h3>Error!</h3><p>{error}</p></article>}
+
+
+            {error && (
+                <section className="error-section">
+                    <article>
+                        <h3>Error!</h3>
+                        <p>{error}</p>
+                    </article>
+                </section>
+            )}
+
             <div>
                 <h2>Recipes</h2>
                 <PagerBar
-                        total={total}
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        prevPage={prevPage}
-                        nextPage={nextPage}
-                      />
+                    total={total}
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    prevPage={prevPage}
+                    nextPage={nextPage}
+                />
 
                 {loading
                     ? <h2>loading</h2>
@@ -76,7 +96,6 @@ const RecipeList: React.FC = () => {
             </div>
 
 
-            <h2>end</h2>
         </section>
     );
 };

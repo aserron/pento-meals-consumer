@@ -84,6 +84,7 @@ const useMeals = (searchQuery: string = '', category: string = '', pageSize: num
                 setTotal((data.meals || []).length);
                 setTotalPages(Math.ceil((data.meals || []).length / pageSize));
             }
+            
         } catch (error) {
             setError('Error fetching meals');
         } finally {
