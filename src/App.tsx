@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import RecipeList from "./components/RecipeList";
+import {Box, Center, ChakraProvider, CSSReset} from "@chakra-ui/react";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <ChakraProvider>
+            <CSSReset />
+            <div className="App" style={{display: 'hidden'}}>
+                <Box p={4}>
+                    <header className="App-header">
+                        <Center>
+                            <h1>Meals API Consumter</h1>
+                        </Center>
+                    </header>
+                    <section className={`App-search`}>
+                        <RecipeList/>
+                    </section>
+                </Box>
+            </div>
+
+        </ChakraProvider>
+
+    );
 }
 
 export default App;
