@@ -1,0 +1,20 @@
+.pager-link-ct {
+    display: flex;
+}
+.pager-link {
+    border: 2px solid black;
+    border-radius: 2px;
+    background: lightgray;
+    width: 30px;
+    height: 30px;
+    text-decoration: none;
+    list-style: none;
+    margin: 10px;
+    text-align: center;
+    vert-align: middle;
+}
+
+.pager-link.current {
+    font-weight: bolder;
+    background: chocolate;
+}
