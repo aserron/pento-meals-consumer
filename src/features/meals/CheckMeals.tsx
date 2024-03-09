@@ -1,59 +1,30 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {keepPreviousData, useQuery, useQueryClient} from "@tanstack/react-query";
 import {Meal} from "../../hooks/meals/Meal.types";
 import Pager from "../../components/Pager/Pager";
 import {FilterBar} from "../../components/filter/FilterBar";
 import useMeals from "../../hooks/meals/useMeals";
 import RefreshSelect from "../config/RefreshSelect";
-
-const fetchMealsByName = async (word = '', page = 0) => {
-    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${word}`
-    return fetch(url + `&page=${page}`).then((res) => res.json())
-}
-
-function SearchInput(props: { onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) {
-    return <input type={"text"} onChange={props.onChange}/>;
-}
+import {SearchInput} from "./components/SearchInput";
+import {Paging} from "./components/Paging";
 
 const CheckMeals: React.FC<{}> = (props) => {
 
     const [page, setPage] = React.useState(0);
     const [word, setWord] = useState('');
 
-    // const queryClient = useQueryClient();
-    // queryClient.invalidateQueries({
-    //     queryKey: ['projects', word],
-    //     exact: true,
-    //     type: 'inactive', // only invalidate inactive queries
-    //     refetchType: 'none' // dont refetch until needed
-    // })
-    // const {
-    //     isPending,
-    //     isError,
-    //     error,
-    //     data,
-    //     isFetching,
-    //     isPlaceholderData
-    // } = useQuery({
-    //     queryKey: ['projects', word],
-    //     queryFn: () => fetchMealsByName(word),
-    //     placeholderData: keepPreviousData,
-    //     refetchInterval: 1000 * 10,
-    // })
-
-
     const [refreshInterval, setRefreshInterval] = useState(1000);
-    
+
     const {
-            isPending,
-            isError,
-            error,
-            data,
-            isFetching,
-            isPlaceholderData
-        } = useMeals(word,page,refreshInterval);
+        isPending,
+        isError,
+        error,
+        data,
+        isFetching,
+        isPlaceholderData
+    } = useMeals(word, page, refreshInterval);
 
 
+    // each new fetching we return to page 1 (index 0)
     useEffect(() => {
         setPage(0);
     }, [data])
@@ -63,7 +34,7 @@ const CheckMeals: React.FC<{}> = (props) => {
     }, [])
 
 
-    // install in ul, catch all and filter by current el clicked.
+    // callback will be kept
     const handlePageClick = useCallback((event: React.MouseEvent<HTMLUListElement>) => {
 
         const data = event.target as HTMLUListElement;
@@ -87,11 +58,12 @@ const CheckMeals: React.FC<{}> = (props) => {
             <div>Loading...</div>
         </>)
     }
+
     if (isError) {
         return <>
             <input type={"text"} onChange={handleChange}/>
             <hr/>
-            <div>Error! {(error!==null) ? error.message:''}</div>
+            <div>Error! {(error !== null) ? error.message : ''}</div>
         </>
     }
 
@@ -102,39 +74,16 @@ const CheckMeals: React.FC<{}> = (props) => {
     const offSet = page * pageSize;
     const filtered = data.meals.slice(offSet, offSet + pageSize);
 
-    const Pagging = () => {
-        return <>
-            <span>Current Page: {page + 1}</span><br/>
-            <button
-                onClick={() => setPage((old) => Math.max(old - 1, 0))}
-                disabled={page === 0}
-            >
-                Previous Page
-            </button>
-            {
-                ' | '
-            }
-            <button
-                onClick={() => {
-                    if (!isPlaceholderData && (page < total - 1)) {
-                        setPage((old: any) => parseInt(old) + 1)
-                    }
-                }}
-                // Disable the Next Page button until we know a next page is available
-                disabled={isPlaceholderData || (page === total - 1)}
-            >
-                Next Page
-            </button>
-            {
-                isFetching ? <span> Loading...</span> : null
-            }{
-            ' '
+    const handlePrevPage = () => {
+        setPage((prevState: number) => Math.max(prevState - 1, 0))
+    };
+    const handleNextPage = () => {
+        if (!isPlaceholderData && (page < total - 1)) {
+            setPage((old: any) => parseInt(old) + 1)
         }
-        </>
     }
 
-
-    function handleOnChange(interval:number) {
+    function handleOnChange(interval: number) {
         setRefreshInterval(interval)
     }
 
@@ -146,9 +95,16 @@ const CheckMeals: React.FC<{}> = (props) => {
             <hr/>
             <SearchInput onChange={handleChange}/>
             <hr/>
-            <FilterBar />
+            <FilterBar/>
             <hr/>
-            <Pagging/>
+            <Paging {...{
+                page,
+                total,
+                isFetching,
+                isPlaceholderData,
+                onNextPage:handleNextPage,
+                onPrevPage:handlePrevPage}
+            }/>
             <div>
                 {isEmpty ? (
                     <div>No Results</div>
