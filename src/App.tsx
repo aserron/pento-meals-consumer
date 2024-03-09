@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import RecipeList from "./components/RecipeList";
+import RecipeList from "./components/meals/RecipeList";
 import {Box, Center, ChakraProvider, CSSReset} from "@chakra-ui/react";
 
 function App() {
