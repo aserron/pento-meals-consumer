@@ -1,46 +1,167 @@
-# Getting Started with Create React App
+# Pento Technical Challenge
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Original CRA readme: [Link](./docs/README.md)
 
-## Available Scripts
+**Contents**  
+<!-- TOC -->
+* [Pento Technical Challenge](#pento-technical-challenge)
+  * [About the company and application.](#about-the-company-and-application-)
+    * [Recipe App List View](#recipe-app-list-view)
+      * [Description](#description)
+    * [The app must have:](#the-app-must-have)
+      * [Not mandatory, but it would be nice if the app had:](#not-mandatory-but-it-would-be-nice-if-the-app-had)
+  * [Project Outcome: V1](#project-outcome-v1)
+  * [About the new V2 solution...](#about-the-new-v2-solution)
+    * [Important: Senior level code will be used.](#important-senior-level-code-will-be-used)
+      * [Features NOT included.](#features-not-included)
+<!-- TOC -->
 
-In the project directory, you can run:
+---
+## Introduction
+Code solution for Pento's Sse. Challenged.
+Features custom hooks, modern react, good practices, clean code, other sorts of good manners.
 
-### `npm start`
+---
+## About the new V2 solution...
+After haven't received any feedback on the submission I felts I did not put enough love on this (may be I was on point). 
+So just for academic, research and craftsmanship purposes I will redo the challenge following a higher bar. 
+We pump up the requirements in terms of how to execute.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+I'm going to dismiss the call for simplicity and the highlight in creativity.  
 
-### `npm test`
+  From the definition document [(link)](./docs/pento-task-definition.md#disclaimers)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    
+  > #### Disclaimers  
+  > ##### Limited Time Expectation
+  > We understand that this assignment is being completed under a limited timeframe.  
+  > Therefore, we do not expect exhaustive, fully polished deliverables. 
+  > 
+  > The primary aim is to assess your approach, creativity, and fundamental skills.
+  > 
+  > Quality and thoughtfulness are preferred over quantity and extensive detail. 
+  >
+  > ##### External Tools Usage
+  > In Pento we encourage the usage of tools (Stack Overflow, Copilot, ChatGPT, etc.)  to enhance performance. However for this assignment it is much preferred to primarily rely on your intrinsic knowledge and creativity and showcase your individual capabilities.
+  > 
+  > In case you do use code completely from any of these tools, 
+  > leave a comment on which tools were used where.   
+  
+  *   [Read the full task definition from pento. (link)](./docs/pento-task-definition.md)
 
-### `npm run build`
+### My Personal Notes on the task definition.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Well, it's a REST consumer, paged, with hooks, search, filter, ui framework...
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+For a Sse. React level coder in 5 hs, requirements constraint... 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+What would the looking for?
+Animated UI, mobile first, full cross-platform, aria ready, internalization,... alexa integration?
 
-### `npm run eject`
+Implementation of React.Query 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+And why they wanted the auto-reload on a service that doesn't update the data?
+Reloading and sub-component updating fits in some time sensible data feed, finance values, sensors, global debt.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Aside from reloading the content while preserving the page position and filtering 
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Workflow:
+- requirements as a Stories or Feature task from JIRA.
+- features branch with PR, Merge
+- documenting each step, feature implementation
+   
+  note: 
+
+    Also I will do a less personal useMeals hook, I feel they didn't like how I pack 
+    the paging logic inside the hook.
+
+### Updated Difficulty: Senior level code will be used.
+Moving on ahead of the challenge we will use some 
+more advanced practices.
+
+#### Senior Level Extra Features.
+  - Full Chakra UI implementation. 
+  - State And Context
+    - useContext for providing data.
+    - moving out the consumer out into a context provider.
+  - paging logic into a usePager hook.
+  - auto-reload switch. 
+  - reset controls switch.
+
+- performance / quality optimization
+  - Improved decoupling, cohesion, reusable code.  
+  - Full modular design, sep. of concerns.
+  - Advanced file layout, code organization.
+  - EsLint TS complain.
+  - TS, JS code quality observed.
+
+#### Experimental (would be nice)
+  - Cero Unneeded Re-Render.
+  - Minimal component interdependency.
+  - Server Side Ready code.
+  - Fully decoupled look and feel.
+  - Fully decoupled layout.
+
+#### Features NOT included.
+- Async side effect / libraries won't be used such a thunks.
+
+Lastly:
+- I will invite the guys to the repo, eventually they will
+
+
+
+---
+
+## About the company and application. 
+
+ 
+
+I found pento application at LinkedIn without any previous knowledge on the company.
+It seems to be another staff augmentation biz broking devs.
+
+The entry was for a Sse. Full Stack.
+
+The Chief technology officer takes on the reviewer job of your task. 
+In general, that's great but here after any feedback on the task, 
+In the end, after receiving a generic "not moving" email, 
+its difficult avoiding feeling it was a waste of time.  
+
+
+
+
+
+---
+
+### Recipe App List View
+> Home Assignment | Ssr Full-Stack Developer @ Pento 
+
+#### Description
+Your task is to create the list view of a recipe app in React, given a mockup and a tech specification. The app uses the The Meal DB API to retrieve the data.
+
+### Technical Specification
+
+#### The app must have:
+  - A search bar.    
+  - A list of meals that resulted from the search showing fields id, name, area, category.
+  - A field to filter by category.
+  - A custom hook useMeals to fetch data from the API.
+
+#### Not mandatory, but it would be nice if the app had:
+  -  Typescript.
+  -  Auto refetching built from scratch on the useMeals hook, to re-validate data every 10 seconds (no libraries allowed).
+  -  A field to filter by area.
+  -  Pagination.
+
+## Project Outcome: V1
+Originally submitted V1 complains with all required and optional requiremnts.  
+It also achieved the 5h development time limit.
+
+> - outcome : Not moving.   
+> - feedback: Not feedback provided. 
+> 
