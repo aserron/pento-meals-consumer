@@ -12,10 +12,7 @@ interface PagerBarProps {
 
 const PagerBar: React.FC<PagerBarProps> = ({isLoading, total, totalPages, currentPage, prevPage, nextPage}) => {
     return (
-        <Box className="pager" pt={2}>
-            <div className="pager-found">
-                Found: {total} Recipes
-            </div>
+        <Box className="pager" pt={2}>            
             {totalPages && (totalPages > 0) && (
                 <div className="pager-controls">
                     <Button onClick={prevPage} disabled={isLoading && (currentPage === 1)}>Prev</Button>

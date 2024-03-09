@@ -103,7 +103,7 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
             setTotalPages(Math.ceil(filtered.length / pageSize));
             setTotal((filtered || []).length);
 
-            console.info('filtered, setting filtered and total', filtered);
+            console.info("%c[useMeals] onRender", consoleStyles.use, 'setting filtered and total:', filtered.length);
 
             // paging
             const startIndex = (currentPage - 1) * pageSize;
@@ -119,7 +119,7 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
 
 
     const goToPage = useCallback((page: number) => {
-        console.warn(`useCallback((${page}) => ...)`);
+        // console.warn(`useCallback((${page}) => ...)`);
         setCurrentPage(page);
     }, [])
 

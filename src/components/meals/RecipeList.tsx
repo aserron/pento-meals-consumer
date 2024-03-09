@@ -4,28 +4,16 @@ import React, {useCallback, useEffect, useState} from 'react';
 import useMeals from '../../hooks/useMeals/useMeals';
 import SearchBar from "../search/SearchBar";
 import PagerBar from "../PagerBar";
-import {WarningIcon } from '@chakra-ui/icons'
 
-import {
-    TypographyProps,    
-    Icon,
-    Box,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    Spinner,
-    Alert,
-    AlertIcon,
-    Image,
-    AbsoluteCenter,
-    Center, Heading, chakra
-} from '@chakra-ui/react';
+import {Alert, AlertIcon, Box} from '@chakra-ui/react';
 
 import cs from "../../utils/ConsoleStyles";
-import {Meals} from "../../hooks/useMeals/Recipe.interface";
+
+import {MealsTable} from "./MealsTable";
+import {useToast} from '@chakra-ui/react'
+
+
+
 
 
 function SearchError({error}: { error: string | null }) {
@@ -38,55 +26,6 @@ function SearchError({error}: { error: string | null }) {
             </Alert>
     );
 }
-
-
-function NoResults() {
-    return <Tr>
-        <Td colSpan={5} w={4}>
-            <Center>
-                <Heading><WarningIcon boxSize={4}/>No Result</Heading>
-            </Center>
-
-        </Td>        
-    </Tr>;
-}
-
-const MealList: React.FC<{ meals: Meals, isLoading: boolean }> = ({meals, isLoading}) => {
-
-    const isEmptyMealArr = !meals || meals.length === 0;
-
-    return (isLoading)
-
-        ? <Spinner size="lg" mt={4}/>
-
-        : <Table mt={4} variant="striped" colorScheme="teal">
-            <Thead>
-                <Tr>
-                    <Th width={4}>ID</Th>
-                    <Th width={100}>-</Th>
-                    <Th>Name</Th>
-                    <Th>Area</Th>
-                    <Th>Category</Th>
-                </Tr>
-            </Thead>
-
-            <Tbody>
-                {
-                    (isEmptyMealArr)
-                        ? <NoResults/>
-                        : meals.map((meal) => (
-                            <Tr key={meal.idMeal}>
-                                <Td w={4}>{`#${meal.idMeal}`}</Td>
-                                <Td w={10} pr={0}><Image src={meal.strMealThumb}></Image></Td>
-                                <Td>{meal.strMeal}</Td>
-                                <Td>{meal.strArea}</Td>
-                                <Td>{meal.strCategory}</Td>
-                            </Tr>
-                        ))
-                }
-            </Tbody>
-        </Table>;
-};
 
 const RecipeList: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -115,6 +54,8 @@ const RecipeList: React.FC = () => {
         pageSize
     );
 
+    const toast = useToast();
+
     // Reset current page when search query or category changes
     useEffect(() => {
         goToPage(1);
@@ -135,6 +76,19 @@ const RecipeList: React.FC = () => {
         };
     }, [reloadMeals, reload]);
 
+
+    // further we can add a switch to control reloading.
+    useEffect(() => {
+        if (!!error) {
+            console.info('Toast', error);
+
+            toast({
+                title: `${error}`,
+                status: "error",
+                isClosable: true,
+            })
+        }
+    }, [error]);
 
     // handlers.
 
@@ -176,7 +130,7 @@ const RecipeList: React.FC = () => {
                 currentPage={currentPage}
             />
 
-            <MealList meals={meals} isLoading={loading}/>
+            <MealsTable meals={meals} isLoading={loading}/>
 
 
         </Box>

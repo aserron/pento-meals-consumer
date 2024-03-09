@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo, PropsWithChildren, useCallback} from 'react';
 import {Flex, FormControl, Input, InputGroup, InputRightElement} from "@chakra-ui/react";
 import consoleStyles from "../../utils/ConsoleStyles";
 import {SearchIcon} from "@chakra-ui/icons";
@@ -6,7 +6,7 @@ import {FilterBar} from "./FilterBar";
 
 // import './SearchBar.css'; // Import CSS file for styling
 
-export interface SearchBarProps {
+export interface ISearchBarProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
     selectedCategory: string;
@@ -14,6 +14,8 @@ export interface SearchBarProps {
     onCategoryChange: (category: string) => void;
     onAreaChange: (area: string) => void;
 }
+
+type SearchBarProps = React.PropsWithChildren<ISearchBarProps>;
 
 
 function NameSearchInput(
@@ -32,7 +34,7 @@ function NameSearchInput(
                    type='search'
                    defaultValue={defaultValue}
                    onChange={onChange}
-                   aria-name={'Recipe Name'}
+                   aria-label={'name'}
                    placeholder='recipe name'/>
         </InputGroup>
     )
@@ -47,16 +49,17 @@ function NameSearchInput(
  * @param selectedArea
  * @param onAreaChange
  * @constructor
- * @type {React.FC<SearchBarProps>}
+ * @type {SearchBarProps}
  */
 function SearchBar({
+                       children,
                        searchQuery,
                        onSearchChange,
                        selectedCategory,
                        onCategoryChange,
                        selectedArea,
                        onAreaChange,
-                   }: SearchBarProps) {
+                   }: PropsWithChildren<SearchBarProps>) {
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(`[SearchBar] handleChange: e=`, e.target);
@@ -85,6 +88,7 @@ function SearchBar({
                        onCatChange={hdlCatChange}
                        onAreaChange={hdlAreaChange}/>
         </Flex>
+        {children}
     </>)
 }
 
@@ -97,12 +101,29 @@ export default memo(
 
     /**
      * Compare Fn allows us to debug right in the moment of the nextProps evaluation.
+     * @example
+       keys.forEach((k:P , i:number) => {
+          
+           let a: any, b: any;
+          
+           if (Object.hasOwn(prevProps, k)) {
+               a = prevProps[k]
+           }
+          
+           if (Object.hasOwn(nextProps, k)) {
+               b = nextProps[k]
+           }
+          
+           const eq = Object.is(a, b);
+           result.push({i, k,eq, a, b});        
+      
+       })
      * @param prevProps
      * @param nextProps
      */
     (prevProps: SearchBarProps, nextProps: SearchBarProps) => {
 
-        console.info('SearchBar: memo', prevProps);
+        // console.info('SearchBar: memo', prevProps);
 
         const keys = Object.getOwnPropertyNames(nextProps) as X;
 
@@ -125,22 +146,7 @@ export default memo(
 
         // debug
 
-        // keys.forEach((k:P , i:number) => {
-        //    
-        //     let a: any, b: any;
-        //    
-        //     if (Object.hasOwn(prevProps, k)) {
-        //         a = prevProps[k]
-        //     }
-        //    
-        //     if (Object.hasOwn(nextProps, k)) {
-        //         b = nextProps[k]
-        //     }
-        //    
-        //     const eq = Object.is(a, b);
-        //     result.push({i, k,eq, a, b});        
-        //
-        // })
+        
 
         // console.table(result);
         // console.table(prevProps);

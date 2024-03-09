@@ -11,12 +11,12 @@ export const AreaSelect: React.FC<{
 
     const [areas, setAreas] = useState<string[]>([]);
 
+    // @todo add error handling
     useEffect(() => {
         fetch('https://www.themealdb.com/api/json/v1/1/list.php?a=list')
             .then(res => res.json())
             .then(data => {
-                const arr = data.meals.map((it: any) => it.strArea);
-                console.error(arr);
+                const arr = data.meals.map((it: any) => it.strArea);                
                 setAreas(arr);
             })
     }, []);
