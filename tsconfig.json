@@ -1,7 +1,18 @@
 {
+  "extends": "@node",
+  "include": [
+    "src",
+    "node_modules"
+    
+  ],
+  "buildOptions": {
+    "verbose": true,
+    "force": true,
+    "traceResolution": true
+  },
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
+    "target": "es6",
+    "lib": [      
       "dom",
       "dom.iterable",
       "esnext"
@@ -13,14 +24,24 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "Node16",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
+    // or `emitDeclarationOnly`
+    "jsx": "react-jsx",
+    "resolvePackageJsonImports": true,
+    "preserveConstEnums": true,
+    "allowImportingTsExtensions": true,
+    "allowArbitraryExtensions": true,
+    
+    // or `isolatedModules`
+    "rootDir": ".",
+    "baseUrl": "./",
+    "paths": {
+      "@shared/*": ["./src/app/_shared/*"]
+    }
+  }
+  
 }
