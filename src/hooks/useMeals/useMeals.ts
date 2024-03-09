@@ -20,139 +20,139 @@ export interface CategoriesResponse {
 
 const useMeals = (area: string = '', category: string = '', pageSize: number = DEFAULT_PAGE_SIZE) => {
 
-        const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
-        const [allMeals, setAllMeals] = useState<RecipeInterface[]>([]);
-        const [filteredMeals, setFilteredMeals] = useState<RecipeInterface[]>([]);
+    const [allMeals, setAllMeals] = useState<RecipeInterface[]>([]);
+    const [filteredMeals, setFilteredMeals] = useState<RecipeInterface[]>([]);
 
-        const [loading, setLoading] = useState<boolean>(false);
-        const [reload, setReload] = useState<boolean>(false);
-        
-        const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [reload, setReload] = useState<boolean>(false);
 
-        const [currentPage, setCurrentPage] = useState<number>(1);
-        const [totalPages, setTotalPages] = useState<number | null>(null);
-        const [total, setTotal] = useState<number | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-        console.info("%c[useMeals] onRender", consoleStyles.use, `searchQuery=${searchQuery}`)
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number | null>(null);
+    const [total, setTotal] = useState<number | null>(null);
 
-
-        const fetchMeals = useCallback(async () => {
-
-            console.info("%c[useMeals] fetchMeals", consoleStyles.use, `s=${searchQuery}`)
-
-            let url = `${BASE_URL}/search.php?s=${searchQuery}&p=0`;
-
-            const response = await fetch(url);
-            const data: ApiResponseInterface = await response.json();
-            return data;
-        }, [searchQuery])
+    console.info("%c[useMeals] onRender", consoleStyles.use, `searchQuery=${searchQuery}`)
 
 
-        useEffect(() => {
-                setLoading(true);
-                setError(null);
+    const fetchMeals = useCallback(async () => {
 
-                fetchMeals()
-                    .then((data) => {
+        console.info("%c[useMeals] fetchMeals", consoleStyles.use, `s=${searchQuery}`)
 
-                        // if reload, we keep current page;
-                        if(reload){
-                            setReload(false);
-                            setCurrentPage(currentPage);    
-                        } else {
-                            setCurrentPage(1);    
-                        }
-                        
+        let url = `${BASE_URL}/search.php?s=${searchQuery}&p=0`;
 
-                        // main data set.
-                        setAllMeals(data.meals || []);
-
-                        // update total count, pages.
-                        if (data.total !== undefined) {
-                            setTotal(data.total);
-                            setTotalPages(Math.ceil(data.total / pageSize));
-                        } else {
-                            setTotal((data.meals || []).length);
-                            setTotalPages(Math.ceil((data.meals || []).length / pageSize));
-                        }
-                    })
-                    .catch(error => setError('Error fetching meals:' + error.message))
-                    .finally(() => {
-                        setLoading(false);
-                    })
-
-                return () => {
-                    console.warn(`%c[useMeals] useEffect: unmount`, consoleStyles.use);
-                }
-
-            },
-            [searchQuery, category, pageSize]
-        );
+        const response = await fetch(url);
+        const data: ApiResponseInterface = await response.json();
+        return data;
+    }, [searchQuery])
 
 
-        useEffect(
-            () => {
-                // Filter meals based on category and area, if present.            
-                const filtered = allMeals
-                    .filter((meal) => ((category === '') || meal.strCategory === category))
-                    .filter((meal) => ((area === '') || meal.strArea === area))
+    useEffect(
+        () => {
+            setLoading(true);
+            setError(null);
 
-                // updating total and pages with filted version.                
-                setTotalPages(Math.ceil(filtered.length / pageSize));
-                setTotal((filtered || []).length);
+            fetchMeals()
+                .then((data) => {
 
-                console.info('filtered, setting filtered and total', filtered);
+                    // if reload, we keep current page;
+                    if (reload) {
+                        setReload(false);
+                        setCurrentPage(currentPage);
+                    } else {
+                        setCurrentPage(1);
+                    }
 
-                // paging
-                const startIndex = (currentPage - 1) * pageSize;
-                const endIndex = startIndex + pageSize;
 
-                // slicing the filtered to get the page.
-                const result = filtered.slice(startIndex, endIndex);
+                    // main data set.
+                    setAllMeals(data.meals || []);
 
-                setFilteredMeals(result);
+                    // update total count, pages.
+                    if (data.total !== undefined) {
+                        setTotal(data.total);
+                        setTotalPages(Math.ceil(data.total / pageSize));
+                    } else {
+                        setTotal((data.meals || []).length);
+                        setTotalPages(Math.ceil((data.meals || []).length / pageSize));
+                    }
+                })
+                .catch(error => setError(`Error fetching meals: ${error}`))
+                .finally(() => {
+                    setLoading(false);
+                })
+
+            return () => {
+                console.warn(`%c[useMeals] useEffect: unmount`, consoleStyles.use);
             }
-            , [loading, searchQuery, allMeals, currentPage, pageSize]
-        )
+
+        },
+        [searchQuery, category, pageSize]
+    );
 
 
-        const goToPage = useCallback((page: number) => {
-            console.warn(`useCallback((${page}) => ...)`);
-            setCurrentPage(page);
-        }, [])
+    useEffect(
+        () => {
+            // Filter meals based on category and area, if present.            
+            const filtered = allMeals
+                .filter((meal) => ((category === '') || meal.strCategory === category))
+                .filter((meal) => ((area === '') || meal.strArea === area))
 
-        const nextPage = () => {
-            if (currentPage < (totalPages || 1)) {
-                setCurrentPage(currentPage + 1);
-            }
-        };
+            // updating total and pages with filted version.                
+            setTotalPages(Math.ceil(filtered.length / pageSize));
+            setTotal((filtered || []).length);
 
-        const prevPage = () => {
-            if (currentPage > 1) {
-                setCurrentPage(currentPage - 1);
-            }
-        };
+            console.info('filtered, setting filtered and total', filtered);
 
-        const reloadMeals = useCallback(() => {
-            setReload(true);
-            // const p = currentPage;
-            // fetchMeals().then(() => {
-            //     goToPage(p)
-            // });
-        }, [searchQuery, currentPage]);
+            // paging
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+
+            // slicing the filtered to get the page.
+            const result = filtered.slice(startIndex, endIndex);
+
+            setFilteredMeals(result);
+        }
+        , [loading, searchQuery, allMeals, currentPage, pageSize]
+    )
 
 
-        return {
-            searchQuery, setSearchQuery,
-            meals: filteredMeals,
-            loading,
-            error,
-            total,
-            currentPage, totalPages, goToPage, nextPage, prevPage,
-            reloadMeals
-        };
-    }
-;
+    const goToPage = useCallback((page: number) => {
+        console.warn(`useCallback((${page}) => ...)`);
+        setCurrentPage(page);
+    }, [])
+
+    const nextPage = () => {
+        if (currentPage < (totalPages || 1)) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const prevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const reloadMeals = useCallback(() => {
+        setReload(true);
+        // const p = currentPage;
+        // fetchMeals().then(() => {
+        //     goToPage(p)
+        // });
+    }, [searchQuery, currentPage]);
+
+
+    return {
+        searchQuery, setSearchQuery,
+        meals: filteredMeals,
+        loading,
+        error,
+        total,
+        currentPage, totalPages, goToPage, nextPage, prevPage,
+        reloadMeals
+    };
+};
 
 export default useMeals;
