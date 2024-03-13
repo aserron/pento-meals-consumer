@@ -1,6 +1,6 @@
 import React from "react";
 import {Meals} from "../../hooks/useMeals/Recipe.interface";
-import {Center, Heading, Image, Spinner, Table, Tbody, Td, Tfoot, Th, Thead, Tr} from "@chakra-ui/react";
+import {Box, Center, Heading, Image, Spinner, Table, Tbody, Td, Tfoot, Th, Thead, Tr} from "@chakra-ui/react";
 import {WarningIcon} from "@chakra-ui/icons";
 import {totalmem} from "node:os";
 
@@ -50,9 +50,23 @@ export const MealsTable: React.FC<{ meals: Meals, isLoading: boolean }> = ({meal
                     (isEmptyMealArr)
                         ? <NoResults/>
                         : meals.map((meal) => (
-                            <Tr h={120} key={meal.idMeal}>
+                            <Tr h={100} key={meal.idMeal}>
+                                
                                 <Td minH={120} w={4}>{`#${meal.idMeal}`}</Td>
-                                <Td w={10} pr={0}><Image src={meal.strMealThumb}></Image></Td>
+                                
+                                <Td maxWidth={60} p={0}>
+                                    <Center>
+                                        <Box bg="tomato" p={1} color="white">
+                                            <Image
+                                                align={"center"}
+                                                boxSize={"80px"}
+                                                alt={meal.idMeal}
+                                                src={meal.strMealThumb}
+                                                fallbackSrc='https://via.placeholder.com/150'
+                                            ></Image></Box>
+                                    </Center>
+                                </Td>
+
                                 <Td>{meal.strMeal}</Td>
                                 <Td>{meal.strArea}</Td>
                                 <Td>{meal.strCategory}</Td>
