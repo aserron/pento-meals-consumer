@@ -5,15 +5,12 @@ import useMeals from '../../hooks/useMeals/useMeals';
 import SearchBar from "../search/SearchBar";
 import PagerBar from "../PagerBar";
 
-import {Alert, AlertIcon, Box} from '@chakra-ui/react';
+import {Alert, AlertIcon, Box, Button, Center, VStack} from '@chakra-ui/react';
 
 import cs from "../../utils/ConsoleStyles";
 
-import {MealsTable} from "./MealsTable";
+import {MealsTable, MealsTableFooter} from "./MealsTable";
 import {useToast} from '@chakra-ui/react'
-
-
-
 
 
 function SearchError({error}: { error: string | null }) {
@@ -107,32 +104,48 @@ const RecipeList: React.FC = () => {
         setSelectedArea(s);
     }, [setSelectedArea]);
 
+
     return (
-        <Box>
-            <SearchBar
-                searchQuery={searchQuery}
-                onSearchChange={handleSearchChange}
+        <Box w={`100%`}>
+            <VStack>
+                <Center  w={`100%`}>
+                    <SearchBar
+                        searchQuery={searchQuery}
+                        onSearchChange={handleSearchChange}
 
-                selectedCategory={selectedCategory}
-                onCategoryChange={handleCategoryChange}
+                        selectedCategory={selectedCategory}
+                        onCategoryChange={handleCategoryChange}
 
-                selectedArea={selectedArea}
-                onAreaChange={handleAreaChange}
-            />
-            <SearchError error={error}/>
+                        selectedArea={selectedArea}
+                        onAreaChange={handleAreaChange}
+                    />
+                    <SearchError error={error}/>
+                </Center>
+                <Center>
+                    <PagerBar
+                        isLoading={loading}
+                        total={total}
+                        totalPages={totalPages}
+                        prevPage={prevPage}
+                        nextPage={nextPage}
+                        currentPage={currentPage}
+                        goToPage={goToPage}
+                    />
+                </Center>
 
-            <PagerBar
-                isLoading={loading}
-                total={total}
-                totalPages={totalPages}
-                prevPage={prevPage}
-                nextPage={nextPage}
-                currentPage={currentPage}
-            />
+                <MealsTable
+                    meals={meals}
+                    totalCount={total ?? 0}
+                    isLoading={loading}
+                    pageSize={pageSize}
+                    totalPages={totalPages ?? 0}
+                    current={currentPage}
+                    loading={loading}
+                    setPage={goToPage}
+                />
 
-            <MealsTable meals={meals} isLoading={loading}/>
 
-
+            </VStack>
         </Box>
     );
 };

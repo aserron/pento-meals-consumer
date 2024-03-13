@@ -1,5 +1,5 @@
 import React, {memo, PropsWithChildren, useCallback} from 'react';
-import {Flex, FormControl, Input, InputGroup, InputRightElement} from "@chakra-ui/react";
+import {Box, Flex, FormControl, HStack, Input, InputGroup, InputRightElement, VStack} from "@chakra-ui/react";
 import consoleStyles from "../../utils/ConsoleStyles";
 import {SearchIcon} from "@chakra-ui/icons";
 import {FilterBar} from "./FilterBar";
@@ -25,8 +25,8 @@ function NameSearchInput(
     }: { defaultValue: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }
 ) {
 
-    return (
-        <InputGroup>
+    return (        
+        <InputGroup width={`100%`}>
             <InputRightElement pointerEvents='none'>
                 <SearchIcon color='gray.300'/>
             </InputRightElement>
@@ -76,19 +76,26 @@ function SearchBar({
 
 
     return (<>
-        <Flex justify="center" m={4}>
-            <FormControl>
-                {/*<FormLabel htmlFor="search">Search Recipes:</FormLabel>*/}
-                <NameSearchInput defaultValue={searchQuery} onChange={handleChange}/>
-            </FormControl>
-        </Flex>
-        <Flex align="center" justify="center">
-            <FilterBar initialValue={selectedCategory}
-                       value={selectedArea}
-                       onCatChange={hdlCatChange}
-                       onAreaChange={hdlAreaChange}/>
-        </Flex>
-        {children}
+        <Box w="100%" p={4}
+             // bg="tomato" color="white"
+        >
+            {/*This is the Box*/}
+            <VStack spacing="24px">
+                <Flex  w={`100%`} justify="center" m={4}>
+                    <FormControl w={`100%`}>
+                        {/*<FormLabel htmlFor="search">Search Recipes:</FormLabel>*/}
+                        <NameSearchInput defaultValue={searchQuery} onChange={handleChange}/>
+                    </FormControl>
+                </Flex>
+                <Flex  w={`100%`} align="center" justify="center">
+                    <FilterBar initialValue={selectedCategory}
+                               value={selectedArea}
+                               onCatChange={hdlCatChange}
+                               onAreaChange={hdlAreaChange}/>
+                </Flex>
+                {children}
+            </VStack>
+        </Box>
     </>)
 }
 
@@ -102,22 +109,22 @@ export default memo(
     /**
      * Compare Fn allows us to debug right in the moment of the nextProps evaluation.
      * @example
-       keys.forEach((k:P , i:number) => {
-          
-           let a: any, b: any;
-          
-           if (Object.hasOwn(prevProps, k)) {
-               a = prevProps[k]
-           }
-          
-           if (Object.hasOwn(nextProps, k)) {
-               b = nextProps[k]
-           }
-          
-           const eq = Object.is(a, b);
-           result.push({i, k,eq, a, b});        
-      
-       })
+     keys.forEach((k:P , i:number) => {
+
+     let a: any, b: any;
+
+     if (Object.hasOwn(prevProps, k)) {
+     a = prevProps[k]
+     }
+
+     if (Object.hasOwn(nextProps, k)) {
+     b = nextProps[k]
+     }
+
+     const eq = Object.is(a, b);
+     result.push({i, k,eq, a, b});
+
+     })
      * @param prevProps
      * @param nextProps
      */
@@ -146,7 +153,6 @@ export default memo(
 
         // debug
 
-        
 
         // console.table(result);
         // console.table(prevProps);

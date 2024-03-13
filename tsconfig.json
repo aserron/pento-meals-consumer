@@ -31,10 +31,8 @@
     "noEmit": true,
     // or `emitDeclarationOnly`
     "jsx": "react-jsx",
-    "resolvePackageJsonImports": true,
+    
     "preserveConstEnums": true,
-    "allowImportingTsExtensions": true,
-    "allowArbitraryExtensions": true,
     
     // or `isolatedModules`
     "rootDir": ".",

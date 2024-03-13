@@ -18,6 +18,10 @@ export interface CategoriesResponse {
     categories: Category[];
 }
 
+export const REFRESH_WAIT = 10000;
+
+type ReloadState = 'off' | 'pre-refresh' | 'refresh';
+
 const useMeals = (area: string = '', category: string = '', pageSize: number = DEFAULT_PAGE_SIZE) => {
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -26,7 +30,7 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
     const [filteredMeals, setFilteredMeals] = useState<RecipeInterface[]>([]);
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [reload, setReload] = useState<boolean>(false);
+    const [reload, setReload] = useState<ReloadState>('off');
 
     const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +39,6 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
     const [total, setTotal] = useState<number | null>(null);
 
     console.info("%c[useMeals] onRender", consoleStyles.use, `searchQuery=${searchQuery}`)
-
 
     const fetchMeals = useCallback(async () => {
 
@@ -49,9 +52,29 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
     }, [searchQuery])
 
 
+    // initialize refresh, give time to inform user and prepera ui.
+    useEffect(() => {
+        setLoading(true);        
+        const t = setTimeout(
+            (cb) => {cb('refresh')}, 
+            REFRESH_WAIT, setReload
+        )
+        return () => {
+            clearTimeout(t);
+        }
+    }, [reload])
+
     useEffect(
         () => {
-            setLoading(true);
+            
+            // avoid when 
+            if (reload === 'pre-refresh') {
+                return;
+            }
+
+            // @todo redundant state: load state now depends or holds refresh
+            setReload('off');
+            // setLoading(true);
             setError(null);
 
             fetchMeals()
@@ -59,7 +82,7 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
 
                     // if reload, we keep current page;
                     if (reload) {
-                        setReload(false);
+                        setReload('off');
                         setCurrentPage(currentPage);
                     } else {
                         setCurrentPage(1);
@@ -69,7 +92,7 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
                     // main data set.
                     setAllMeals(data.meals || []);
 
-                    // update total count, pages.
+                    // update totalCount count, pages.
                     if (data.total !== undefined) {
                         setTotal(data.total);
                         setTotalPages(Math.ceil(data.total / pageSize));
@@ -84,11 +107,11 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
                 })
 
             return () => {
-                console.warn(`%c[useMeals] useEffect: unmount`, consoleStyles.use);
+                console.log(`%c[useMeals] useEffect: unmount`, consoleStyles.use);
             }
 
         },
-        [searchQuery, category, pageSize]
+        [searchQuery, category, pageSize, reload]
     );
 
 
@@ -99,11 +122,11 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
                 .filter((meal) => ((category === '') || meal.strCategory === category))
                 .filter((meal) => ((area === '') || meal.strArea === area))
 
-            // updating total and pages with filted version.                
+            // updating totalCount and pages with filted version.                
             setTotalPages(Math.ceil(filtered.length / pageSize));
             setTotal((filtered || []).length);
 
-            console.info("%c[useMeals] onRender", consoleStyles.use, 'setting filtered and total:', filtered.length);
+            console.info("%c[useMeals] onRender", consoleStyles.use, 'setting filtered and totalCount:', filtered.length);
 
             // paging
             const startIndex = (currentPage - 1) * pageSize;
@@ -117,31 +140,28 @@ const useMeals = (area: string = '', category: string = '', pageSize: number = D
         , [loading, searchQuery, allMeals, currentPage, pageSize]
     )
 
-
+    
+    // paging logic.
     const goToPage = useCallback((page: number) => {
-        // console.warn(`useCallback((${page}) => ...)`);
+        console.warn(`useCallback(setCurrentPage(${page}) => ...)`);
         setCurrentPage(page);
     }, [])
 
-    const nextPage = () => {
+    const nextPage = useCallback(() => {
         if (currentPage < (totalPages || 1)) {
             setCurrentPage(currentPage + 1);
         }
-    };
+    }, [currentPage, totalPages]);
 
-    const prevPage = () => {
+    const prevPage = useCallback(() => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
         }
-    };
+    }, [currentPage]);
 
     const reloadMeals = useCallback(() => {
-        setReload(true);
-        // const p = currentPage;
-        // fetchMeals().then(() => {
-        //     goToPage(p)
-        // });
-    }, [searchQuery, currentPage]);
+        setReload('pre-refresh');
+    }, []);
 
 
     return {
